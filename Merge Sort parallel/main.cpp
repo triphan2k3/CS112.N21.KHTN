@@ -29,7 +29,7 @@ int findPosition(T A[], int p, int r, int x) {
     int low = p;
     int high = r;
     int ans = r + 1;
-    while (low < high) {
+    while (low <= high) {
         int mid = (low + high) >> 1;
         if (A[mid] >= x)
             ans = mid, high = mid - 1;
@@ -49,11 +49,16 @@ void parallelMergeAux(T A[], int p1, int r1, int p2, int r2, T B[], int p3) {
     }
     int q1 = (r1 + p1) >> 1;
     T x = A[q1];
+
     int q2 = findPosition(A, p2, r2, x);
+
+
     int q3 = p3 + (q1 - p1) + (q2 - p2);
     std::thread left(parallelMergeAux<T>, A, p1, q1 - 1, p2, q2 - 1, B, p3);
+    // parallelMergeAux<T>(A, p1, q1 - 1, p2, q2 - 1, B, p3);
     B[q3] = x;
     std::thread right(parallelMergeAux<T>, A, q1 + 1, r1, q2, r2, B, q3 + 1);
+    // parallelMergeAux<T>(A, q1 + 1, r1, q2, r2, B, q3 + 1);
     left.join();
     right.join();
 }
@@ -61,13 +66,14 @@ void parallelMergeAux(T A[], int p1, int r1, int p2, int r2, T B[], int p3) {
 const int MIN_TO_THREAD = 1000;
 template<typename T>
 void mergeParallel(T arr[], int leftPos, int midPos, int rightPos) {
-    if (rightPos - leftPos + 1 >= MIN_TO_THREAD || 1 == 1) {
+    if (rightPos - leftPos + 1 >= MIN_TO_THREAD) {
         T* B = new T[rightPos - leftPos + 1];
         parallelMergeAux<T>(arr, leftPos, midPos, midPos + 1, rightPos, B, 0);
+        for (int i = leftPos; i <= rightPos; i++)
+            arr[i] = B[i - leftPos];
         delete[] B;
     } else 
         mergeArray<T>(arr, leftPos, midPos, rightPos);
-
 }
 
 template<typename T>
@@ -76,7 +82,7 @@ void mergeSortParallel(T arr[], int leftPos, int rightPos) {
         return;
 
     int midPos = (rightPos + leftPos) / 2;
-    if (rightPos - leftPos + 1 >= MIN_TO_THREAD || 1 == 1) {
+    if (rightPos - leftPos + 1 >= MIN_TO_THREAD) {
         std::thread left(mergeSortParallel<T>,arr, leftPos, midPos);
         std::thread right(mergeSortParallel<T>,arr, midPos + 1, rightPos);
         left.join();
@@ -114,7 +120,7 @@ void mergeSort(T arr[], int leftPos, int rightPos) {
     //     printf("THREAD FOR [%8.1d,%8.1d] RUNNING AT CORE %d WITH SIZE %d\n", leftPos, rightPos, sched_getcpu(), rightPos - leftPos + 1);
 }
 
-const int N = 1024;
+const int N = 102000;
 string checkSorted(int a[]) {
     bool checkSorted = true;
     for (int i = 0; i + 1 < N; i++)
@@ -129,11 +135,9 @@ int main() {
     int* temp = new int[N];
     int* a = new int[N];
     for (int i = 0; i < N; i++) {
-        temp[i] = rand();
+        temp[i] = rand() % 10;
         a[i] = temp[i]; // array a used twice
     }
-
-
 
     chrono::high_resolution_clock::time_point t1 = chrono::high_resolution_clock::now();
     mergeSort<int>(a, 0, N - 1);
