@@ -173,8 +173,8 @@ int main() {
 
     int duration_1 = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     int duration_2 = std::chrono::duration_cast<std::chrono::microseconds>(t4 - t3).count();
-    printf("NORMAL TOOK %d microseconds\n", duration_1);
-    printf("PARALLEL TOOK %d microseconds\n", duration_2);
+    printf("NORMAL PARALLEL TOOK %d microseconds\n", duration_1);
+    printf("FULL PARALLEL TOOK %d microseconds\n", duration_2);
 
     // for (int i = 0; i < N; i++)
     //     cout << a[i] << " ";
