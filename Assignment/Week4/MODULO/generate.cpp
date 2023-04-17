@@ -9,7 +9,7 @@ typedef long long ll;
 typedef pair<int, int> ptq;
 
 const int iFirst = 0;
-const int iLast = 20;
+const int iLast = 40;
 
 
 
@@ -43,7 +43,7 @@ string intToString(int x)
 
 void MakeTest(ofstream& cout, int iTest)  // ham sinh test
 {
-    if (iTest <= 4) {
+    if (iTest <= 8) {
         if (iTest == 0) {
             cout << "2\n1 4 4 5\n2 8 3 2";
             return;
@@ -64,7 +64,7 @@ void MakeTest(ofstream& cout, int iTest)  // ham sinh test
             int c = random(1, 1000000000);
             cout << '\n' << 1 << " " << a << " " << b << " " << c;
         }
-    } else if (iTest <= 8) {
+    } else if (iTest <= 16) {
         int t = random(800, 1000);
         cout << t;
         while (t--) {
@@ -73,7 +73,7 @@ void MakeTest(ofstream& cout, int iTest)  // ham sinh test
             int c = random(1, min(a, 100));
             cout << '\n' << 2 << " " << a << " " << b << " " << c;
         }
-    } else if (iTest <= 12) {
+    } else if (iTest <= 24) {
         int t = random(80000, 100000);
         cout << t;
         while (t--) {
